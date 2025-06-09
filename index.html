@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Logistics Container System</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #374151;
+      --color-text-secondary: #6b7280;
+      --color-primary: #111827;
+      --color-primary-hover: #4b5563;
+      --color-border: #e5e7eb;
+      --color-success: #10b981;
+      --color-error: #ef4444;
+      --color-warning: #f59e0b;
+      --color-card-bg: #f9fafb;
+      --radius: 0.75rem;
+      --transition: all 0.3s ease;
+      --font-headline: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-bg);
+      color: var(--color-text-secondary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: 0 1px 4px rgb(0 0 0 / 0.05);
+      z-index: 1000;
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--color-primary);
+      user-select: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a,
+    .nav-links button {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius);
+      transition: var(--transition);
+      background: none;
+      border: none;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus,
+    .nav-links button:hover,
+    .nav-links button:focus {
+      background: var(--color-card-bg);
+      color: var(--color-primary);
+      outline: none;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto 4rem;
+      padding: 0 1.5rem;
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: 48px;
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      font-weight: 700;
+      padding: 0.75rem 2rem;
+      font-size: 18px;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background: var(--color-primary-hover);
+      outline: none;
+    }
+
+    /* Dashboard cards */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      background: var(--color-card-bg);
+      padding: 1.75rem 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.05);
+      color: var(--color-primary);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      user-select: none;
+    }
+
+    .card .value {
+      font-weight: 700;
+      font-size: 32px;
+      margin-bottom: 0.25rem;
+    }
+
+    .card .label {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Tabs nav */
+    .tab-nav {
+      display: flex;
+      gap: 2rem;
+      border-bottom: 2px solid var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .tab-nav button {
+      background: none;
+      border: none;
+      padding: 0.75rem 1rem;
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 4px solid transparent;
+      transition: var(--transition);
+    }
+
+    .tab-nav button[aria-selected="true"] {
+      border-bottom-color: var(--color-primary);
+      color: var(--color-primary);
+      cursor: default;
+    }
+
+    .tab-nav button:focus-visible {
+      outline-offset: 2px;
+      outline: 2px solid var(--color-primary);
+    }
+
+    /* Tab panels */
+    .tab-panel {
+      display: none;
+      flex-direction: column;
+    }
+    .tab-panel[aria-hidden="false"] {
+      display: flex;
+    }
+
+    /* Shipment table */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 0.8rem;
+      user-select: none;
+    }
+
+    thead tr {
+      background: none;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      color: var(--color-text-secondary);
+      vertical-align: middle;
+      font-size: 14px;
+    }
+
+    thead th {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--color-primary);
+      padding-bottom: 0.5rem;
+      user-select: none;
+    }
+
+    tbody tr {
+      background: var(--color-card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 5px rgb(0 0 0 / 0.04);
+      transition: var(--transition);
+    }
+
+    tbody tr:hover {
+      box-shadow: 0 4px 15px rgb(0 0 0 / 0.1);
+    }
+
+    tbody td {
+      position: relative;
+    }
+
+    tbody td:first-child {
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    /* Status labels */
+    .status {
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 12px;
+      display: inline-block;
+    }
+
+    .status.Pending {
+      background: #fbbf24;
+      color: #78350f;
+    }
+
+    .status['In Transit'] {
+      background: #60a5fa;
+      color: #1e40af;
+    }
+
+    .status.Delivered {
+      background: #10b981;
+      color: #064e3b;
+    }
+
+    .status.Delayed {
+      background: #f87171;
+      color: #7f1d1d;
+    }
+
+    .status.Cancelled {
+      background: #9ca3af;
+      color: #374151;
+    }
+
+    /* Payment status */
+    .payment-status {
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 12px;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .payment-status.Paid {
+      background: #34d399;
+      color: #065f46;
+    }
+
+    .payment-status['Not Paid'] {
+      background: #fca5a5;
+      color: #7f1d1d;
+    }
+
+    /* Form styles */
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(240px, 1fr));
+      gap: 1.5rem 2rem;
+      align-items: start;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+      font-size: 14px;
+      user-select: none;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 15px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      transition: var(--transition);
+      color: var(--color-text);
+      background: white;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 2.75rem;
+    }
+
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 5px rgb(59 130 246 / 0.5);
+      background: #fff;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .btn-submit {
+      background: var(--color-primary);
+      color: white;
+      padding: 0.75rem 1.75rem;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition);
+      justify-self: start;
+      margin-top: 0.25rem;
+    }
+
+    .btn-submit:hover,
+    .btn-submit:focus {
+      background: var(--color-primary-hover);
+      outline: none;
+    }
+
+    /* Filter controls */
+    #filterControls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    #filterControls > * {
+      font-size: 14px;
+    }
+
+    #filterControls select,
+    #filterControls input[type="text"] {
+      padding: 0.4rem 0.6rem;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--color-border);
+      font-family: var(--font-body);
+      color: var(--color-text);
+      min-width: 140px;
+    }
+
+    /* Pagination styles */
+    .pagination {
+      user-select: none;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 14px;
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .pagination button {
+      background: var(--color-card-bg);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 0.3rem 0.65rem;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .pagination button:hover:not(:disabled),
+    .pagination button:focus:not(:disabled) {
+      border-color: var(--color-primary);
+      outline: none;
+    }
+
+    .pagination button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 720px) {
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      form {
+        grid-template-columns: 1fr;
+      }
+
+      #filterControls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      background: transparent;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 0.3rem 0.75rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      user-select: none;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover,
+    .theme-toggle:focus {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      outline: none;
+    }
+
+    /* Dark mode overrides */
+    body.dark {
+      --color-bg: #111827;
+      --color-text: #d1d5db;
+      --color-text-secondary: #9ca3af;
+      --color-primary: #f9fafb;
+      --color-primary-hover: #d1d5db;
+      --color-border: #374151;
+      --color-success: #22c55e;
+      --color-error: #f87171;
+      --color-warning: #fbbf24;
+      --color-card-bg: #1f2937;
+    }
+
+    body.dark header {
+      background: #1f2937;
+      border-color: #374151;
+      box-shadow: 0 1px 4px rgb(255 255 255 / 0.05);
+    }
+
+    body.dark nav a,
+    body.dark nav button {
+      color: var(--color-text-secondary);
+    }
+    body.dark nav a:hover,
+    body.dark nav a:focus,
+    body.dark nav button:hover,
+    body.dark nav button:focus {
+      color: var(--color-primary);
+      background: transparent;
+    }
+
+    body.dark table tbody tr {
+      background: var(--color-card-bg);
+      box-shadow: 0 1px 5px rgb(0 0 0 / 0.6);
+    }
+
+    body.dark input,
+    body.dark select,
+    body.dark textarea {
+      background: #374151;
+      border-color: #4b5563;
+      color: var(--color-text);
+    }
+
+    body.dark input:focus,
+    body.dark select:focus,
+    body.dark textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 5px rgb(191 219 254 / 0.8);
+      background: #374151;
+    }
+
+    /* Scrollbar styling */
+    body::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    body::-webkit-scrollbar-track {
+      background: var(--color-bg);
+    }
+    body::-webkit-scrollbar-thumb {
+      background-color: var(--color-border);
+      border-radius: 6px;
+      border: 3px solid var(--color-bg);
+    }
+
+    /* Utility to hide text visually but keep accessible */
+    .sr-only {
+      border: 0 !important;
+      clip: rect(1px, 1px, 1px, 1px) !important;
+      -webkit-clip-path: inset(50%) !important;
+              clip-path: inset(50%) !important;
+      height: 1px !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+      position: absolute !important;
+      width: 1px !important;
+      white-space: nowrap !important;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <nav>
+    <div class="logo" aria-label="Company Logo">LogiContainer</div>
+    <div class="nav-links">
+      <button class="theme-toggle" aria-label="Toggle theme" id="themeToggleBtn">Dark Mode</button>
+    </div>
+  </nav>
+</header>
+<main>
+  <section class="hero" aria-label="Hero Section">
+    <h1>Manage Your Container Shipments Professionally</h1>
+    <p>Handle large shipment volumes easily with pagination, filters, and clear views.</p>
+  </section>
+
+  <nav class="tab-nav" role="tablist" aria-label="Main content navigation">
+    <button role="tab" aria-selected="true" aria-controls="dashboardPanel" id="tabDashboard">Dashboard</button>
+    <button role="tab" aria-selected="false" aria-controls="shipmentsPanel" id="tabShipments">Shipments</button>
+    <button role="tab" aria-selected="false" aria-controls="addShipmentPanel" id="tabAddShipment">Add Shipment</button>
+  </nav>
+
+  <section id="dashboardPanel" class="tab-panel" role="tabpanel" tabindex="0" aria-labelledby="tabDashboard" aria-hidden="false" >
+    <div class="dashboard" aria-label="Dashboard Metrics">
+      <div class="card" role="region" aria-labelledby="totalShipmentsLabel" tabindex="0">
+        <div class="value" id="totalShipmentsCount">0</div>
+        <div class="label" id="totalShipmentsLabel">Total Shipments</div>
+      </div>
+      <div class="card" role="region" aria-labelledby="paidCountLabel" tabindex="0">
+        <div class="value" id="paidCount">0</div>
+        <div class="label" id="paidCountLabel">Paid Shipments</div>
+      </div>
+      <div class="card" role="region" aria-labelledby="unpaidCountLabel" tabindex="0">
+        <div class="value" id="unpaidCount">0</div>
+        <div class="label" id="unpaidCountLabel">Unpaid Shipments</div>
+      </div>
+      <div class="card" role="region" aria-labelledby="totalCostLabel" tabindex="0">
+        <div class="value" id="totalCost">$0</div>
+        <div class="label" id="totalCostLabel">Total Cost</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="shipmentsPanel" class="tab-panel" role="tabpanel" tabindex="0" aria-labelledby="tabShipments" aria-hidden="true">
+    <div id="filterControls" role="search" aria-label="Filter shipments">
+      <select id="filterStatus" aria-label="Filter by status">
+        <option value="">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="In Transit">In Transit</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Delayed">Delayed</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+      <select id="filterPayment" aria-label="Filter by payment status">
+        <option value="">All Payment Status</option>
+        <option value="Paid">Paid</option>
+        <option value="Not Paid">Not Paid</option>
+      </select>
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search by driver, container #, or seal #"
+        aria-label="Search shipments"
+        autocomplete="off"
+      />
+      <button class="btn-primary" id="clearFiltersBtn" aria-label="Clear filters">Clear</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table aria-describedby="shipmentTableDesc" role="grid" id="shipmentsTable" tabindex="0">
+        <caption id="shipmentTableDesc" class="sr-only">List of container shipments</caption>
+        <thead>
+          <tr>
+            <th scope="col">Driver Name</th>
+            <th scope="col">Date Created</th>
+            <th scope="col">Pick Up Date</th>
+            <th scope="col">Time Arrived</th>
+            <th scope="col">Size</th>
+            <th scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Things</th>
+            <th scope="col">Container #</th>
+            <th scope="col">Seal #</th>
+            <th scope="col">Status</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Payment</th>
+            <th scope="col" aria-label="Actions"></th>
+          </tr>
+        </thead>
+        <tbody id="shipmentsTbody">
+          <!-- Rows added by JS -->
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination" role="navigation" aria-label="Shipment list pagination">
+      <button id="prevPageBtn" aria-label="Previous page" disabled>← Prev</button>
+      <span id="pageInfo" aria-live="polite" aria-atomic="true">Page 1</span>
+      <button id="nextPageBtn" aria-label="Next page" disabled>Next →</button>
+    </div>
+  </section>
+
+  <section id="addShipmentPanel" class="tab-panel" role="tabpanel" tabindex="0" aria-labelledby="tabAddShipment" aria-hidden="true" >
+    <h2>Add New Container Shipment</h2>
+    <form id="addShipmentForm" novalidate>
+      <label for="driverName">Driver Name</label>
+      <input type="text" id="driverName" name="driverName" required autocomplete="off" />
+
+      <label for="dateCreated">Date Created</label>
+      <input type="date" id="dateCreated" name="dateCreated" required />
+
+      <label for="pickUpDate">Pick Up Date</label>
+      <input type="date" id="pickUpDate" name="pickUpDate" required />
+
+      <label for="timeArrived">Time Arrived</label>
+      <input type="text" id="timeArrived" name="timeArrived" placeholder="HH:MM" pattern="^([0-1][0-9]|2[0-3]):([0-5][0-9])$" required autocomplete="off" />
+
+      <label for="containerSize">Container Size</label>
+      <select id="containerSize" name="containerSize" required>
+        <option value="" disabled selected>Select size</option>
+        <option value="20ft">20ft</option>
+        <option value="40ft">40ft</option>
+      </select>
+
+      <label for="fromLocation">From</label>
+      <input type="text" id="fromLocation" name="fromLocation" required autocomplete="off" />
+
+      <label for="toLocation">To</label>
+      <input type="text" id="toLocation" name="toLocation" required autocomplete="off" />
+
+      <label for="cargoDescription">Things (Cargo Description)</label>
+      <textarea id="cargoDescription" name="cargoDescription" placeholder="Describe the cargo" required></textarea>
+
+      <label for="containerNumber">Container Number</label>
+      <input type="text" id="containerNumber" name="containerNumber" required autocomplete="off" />
+
+      <label for="sealNumber">Seal Number</label>
+      <input type="text" id="sealNumber" name="sealNumber" required autocomplete="off" />
+
+      <label for="status">Status</label>
+      <select id="status" name="status" required>
+        <option value="" disabled selected>Select status</option>
+        <option value="Pending">Pending</option>
+        <option value="In Transit">In Transit</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Delayed">Delayed</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+
+      <label for="cost">Cost ($)</label>
+      <input type="number" id="cost" name="cost" min="0" step="0.01" required />
+
+      <label for="paymentStatus">Payment Status</label>
+      <select id="paymentStatus" name="paymentStatus" required>
+        <option value="" disabled selected>Select payment status</option>
+        <option value="Paid">Paid</option>
+        <option value="Not Paid">Not Paid</option>
+      </select>
+
+      <button type="submit" class="btn-submit" aria-label="Add shipment">Add Shipment</button>
+    </form>
+  </section>
+</main>
+<script>
+  (() => {
+    "use strict";
+
+    const shipmentsKey = "logi-container-shipments";
+
+    // Elements references
+    const form = document.getElementById("addShipmentForm");
+    const tbody = document.getElementById("shipmentsTbody");
+    const totalShipmentsCount = document.getElementById("totalShipmentsCount");
+    const paidCount = document.getElementById("paidCount");
+    const unpaidCount = document.getElementById("unpaidCount");
+    const totalCost = document.getElementById("totalCost");
+
+    const filterStatus = document.getElementById("filterStatus");
+    const filterPayment = document.getElementById("filterPayment");
+    const searchInput = document.getElementById("searchInput");
+    const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+    // Pagination elements
+    const prevPageBtn = document.getElementById("prevPageBtn");
+    const nextPageBtn = document.getElementById("nextPageBtn");
+    const pageInfo = document.getElementById("pageInfo");
+
+    // Tabs
+    const tabs = [...document.querySelectorAll(".tab-nav button")];
+    const panels = [...document.querySelectorAll(".tab-panel")];
+
+    // Pagination state
+    let currentPage = 1;
+    const itemsPerPage = 20;
+
+    // Storage persistence
+    function getShipments() {
+      try {
+        return JSON.parse(localStorage.getItem(shipmentsKey)) || [];
+      } catch {
+        return [];
+      }
+    }
+    function saveShipments(shipments) {
+      localStorage.setItem(shipmentsKey, JSON.stringify(shipments));
+    }
+
+    // Format a date string to user locale date
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      if (isNaN(d)) return "";
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    // Format cost to currency
+    function formatCost(cost) {
+      return `$${Number(cost).toFixed(2)}`;
+    }
+
+    // Sanitize string for classname (no spaces or special chars)
+    function sanitizeClassName(str) {
+      return str.replace(/\s+/g, '');
+    }
+
+    // Render the shipment table rows filtered and paginated
+    function renderShipments() {
+      const shipments = getShipments();
+
+      // Filtering
+      const statusFilterVal = filterStatus.value;
+      const paymentFilterVal = filterPayment.value;
+      const searchTerm = searchInput.value.trim().toLowerCase();
+
+      let filtered = shipments.filter(s => {
+        if (statusFilterVal && s.status !== statusFilterVal) return false;
+        if (paymentFilterVal && s.paymentStatus !== paymentFilterVal) return false;
+        if (searchTerm) {
+          const combined =
+            (s.driverName + " " + s.containerNumber + " " + s.sealNumber).toLowerCase();
+          if (!combined.includes(searchTerm)) return false;
+        }
+        return true;
+      });
+
+      // Sort by Date Created descending
+      filtered.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
+
+      // Pagination
+      const totalItems = filtered.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      if (currentPage > totalPages) currentPage = totalPages || 1;
+      const startIdx = (currentPage - 1) * itemsPerPage;
+      const endIdx = startIdx + itemsPerPage;
+      const pageItems = filtered.slice(startIdx, endIdx);
+
+      // Clear tbody before render
+      tbody.innerHTML = "";
+
+      // Populate rows
+      pageItems.forEach((s, index) => {
+        const tr = document.createElement("tr");
+        tr.setAttribute("data-index", startIdx + index);
+
+        tr.innerHTML = `
+          <td>${s.driverName}</td>
+          <td>${formatDate(s.dateCreated)}</td>
+          <td>${formatDate(s.pickUpDate)}</td>
+          <td>${s.timeArrived}</td>
+          <td>${s.containerSize}</td>
+          <td>${s.fromLocation}</td>
+          <td>${s.toLocation}</td>
+          <td title="${s.cargoDescription}">${s.cargoDescription.length > 20 ? s.cargoDescription.slice(0, 20) + "…" : s.cargoDescription}</td>
+          <td>${s.containerNumber}</td>
+          <td>${s.sealNumber}</td>
+          <td><span class="status ${sanitizeClassName(s.status)}">${s.status}</span></td>
+          <td>${formatCost(s.cost)}</td>
+          <td><span class="payment-status ${sanitizeClassName(s.paymentStatus)}">${s.paymentStatus}</span></td>
+          <td>
+            <button class="btn-edit" aria-label="Edit shipment ${s.containerNumber}" data-index="${startIdx + index}">✏️</button>
+            <button class="btn-delete" aria-label="Delete shipment ${s.containerNumber}" data-index="${startIdx + index}">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      updateDashboardMetrics(filtered);
+
+      // Update pagination buttons & info
+      pageInfo.textContent = `Page ${currentPage} of ${totalPages || 1}`;
+      prevPageBtn.disabled = currentPage <= 1;
+      nextPageBtn.disabled = currentPage >= totalPages;
+    }
+
+    // Update dashboard metrics
+    function updateDashboardMetrics(shipments) {
+      totalShipmentsCount.textContent = shipments.length;
+      const paid = shipments.filter(s => s.paymentStatus === "Paid");
+      const unpaid = shipments.filter(s => s.paymentStatus === "Not Paid");
+      paidCount.textContent = paid.length;
+      unpaidCount.textContent = unpaid.length;
+      const totalCosts = shipments.reduce((sum, s) => sum + Number(s.cost), 0);
+      totalCost.textContent = formatCost(totalCosts);
+    }
+
+    // Clear form inputs
+    function resetForm() {
+      form.reset();
+      // reset selects with no value fallback
+      ['containerSize', 'status', 'paymentStatus'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+      });
+    }
+
+    // Validate time input HH:MM 24hr format
+    function validateTime(str) {
+      return /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(str);
+    }
+
+    // Add or update shipment
+    let editingIndex = null;
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const shipment = {
+        driverName: formData.get("driverName").trim(),
+        dateCreated: formData.get("dateCreated"),
+        pickUpDate: formData.get("pickUpDate"),
+        timeArrived: formData.get("timeArrived").trim(),
+        containerSize: formData.get("containerSize"),
+        fromLocation: formData.get("fromLocation").trim(),
+        toLocation: formData.get("toLocation").trim(),
+        cargoDescription: formData.get("cargoDescription").trim(),
+        containerNumber: formData.get("containerNumber").trim(),
+        sealNumber: formData.get("sealNumber").trim(),
+        status: formData.get("status"),
+        cost: parseFloat(formData.get("cost")),
+        paymentStatus: formData.get("paymentStatus"),
+      };
+
+      // Basic validation
+      if (!shipment.driverName || !shipment.dateCreated || !shipment.pickUpDate || !validateTime(shipment.timeArrived)
+         || !shipment.containerSize || !shipment.fromLocation || !shipment.toLocation
+         || !shipment.cargoDescription || !shipment.containerNumber || !shipment.sealNumber
+         || !shipment.status || isNaN(shipment.cost) || !shipment.paymentStatus) {
+        alert("Please fill all fields with valid values.");
+        return;
+      }
+
+      let shipments = getShipments();
+      if (editingIndex !== null) {
+        shipments[editingIndex] = shipment;
+        editingIndex = null;
+      } else {
+        shipments.push(shipment);
+      }
+      saveShipments(shipments);
+      renderShipments();
+
+      // Switch to Shipments tab for user convenience
+      selectTabById("tabShipments");
+
+      resetForm();
+    });
+
+    // Delete shipment with confirm
+    tbody.addEventListener("click", e => {
+      if (e.target.matches(".btn-delete")) {
+        const idx = Number(e.target.dataset.index);
+        const shipments = getShipments();
+        if (idx >= 0 && idx < shipments.length) {
+          if (confirm(`Delete shipment with Container #${shipments[idx].containerNumber}?`)) {
+            shipments.splice(idx, 1);
+            saveShipments(shipments);
+            renderShipments();
+          }
+        }
+      } else if (e.target.matches(".btn-edit")) {
+        const idx = Number(e.target.dataset.index);
+        const shipments = getShipments();
+        if (idx >= 0 && idx < shipments.length) {
+          editingIndex = idx;
+          populateForm(shipments[idx]);
+          selectTabById("tabAddShipment");
+          form.driverName.focus();
+        }
+      }
+    });
+
+    // Populate form for editing
+    function populateForm(shipment) {
+      form.driverName.value = shipment.driverName;
+      form.dateCreated.value = shipment.dateCreated;
+      form.pickUpDate.value = shipment.pickUpDate;
+      form.timeArrived.value = shipment.timeArrived;
+      form.containerSize.value = shipment.containerSize;
+      form.fromLocation.value = shipment.fromLocation;
+      form.toLocation.value = shipment.toLocation;
+      form.cargoDescription.value = shipment.cargoDescription;
+      form.containerNumber.value = shipment.containerNumber;
+      form.sealNumber.value = shipment.sealNumber;
+      form.status.value = shipment.status;
+      form.cost.value = shipment.cost;
+      form.paymentStatus.value = shipment.paymentStatus;
+    }
+
+    // Filter handlers
+    filterStatus.addEventListener("change", () => { currentPage = 1; renderShipments(); });
+    filterPayment.addEventListener("change", () => { currentPage = 1; renderShipments(); });
+    searchInput.addEventListener("input", () => { currentPage = 1; renderShipments(); });
+    clearFiltersBtn.addEventListener("click", () => {
+      filterStatus.value = "";
+      filterPayment.value = "";
+      searchInput.value = "";
+      currentPage = 1;
+      renderShipments();
+    });
+
+    // Pagination buttons
+    prevPageBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderShipments();
+        tbody.focus();
+      }
+    });
+    nextPageBtn.addEventListener("click", () => {
+      currentPage++;
+      renderShipments();
+      tbody.focus();
+    });
+
+    // Tabs navigation
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        selectTabById(tab.id);
+      });
+      tab.addEventListener("keydown", e => {
+        let idx = tabs.indexOf(document.activeElement);
+        if (e.key === "ArrowRight") {
+          tabs[(idx + 1) % tabs.length].focus();
+          e.preventDefault();
+        } else if (e.key === "ArrowLeft") {
+          tabs[(idx - 1 + tabs.length) % tabs.length].focus();
+          e.preventDefault();
+        }
+      });
+    });
+
+    function selectTabById(tabId) {
+      tabs.forEach(t => {
+        const selected = t.id === tabId;
+        t.setAttribute("aria-selected", selected.toString());
+        if (selected) t.focus();
+      });
+      panels.forEach(p => {
+        p.setAttribute("aria-hidden", (p.getAttribute("aria-labelledby") !== tabId).toString());
+      });
+    }
+
+    // Theme toggle functionality
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const darkClass = "dark";
+
+    function setTheme(dark) {
+      if (dark) {
+        document.body.classList.add(darkClass);
+        themeToggleBtn.textContent = "Light Mode";
+      } else {
+        document.body.classList.remove(darkClass);
+        themeToggleBtn.textContent = "Dark Mode";
+      }
+      localStorage.setItem("logiThemeDark", dark ? "1" : "0");
+    }
+
+    themeToggleBtn.addEventListener("click", () => {
+      const isDark = document.body.classList.contains(darkClass);
+      setTheme(!isDark);
+    });
+
+    // Load theme from localStorage or system preference
+    (function initTheme() {
+      const saved = localStorage.getItem("logiThemeDark");
+      if (saved === null) {
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        setTheme(prefersDark);
+      } else {
+        setTheme(saved === "1");
+      }
+    })();
+
+    // Initial render
+    renderShipments();
+
+  })();
+</script>
+</body>
+</html>
+
